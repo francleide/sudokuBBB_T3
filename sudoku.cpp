@@ -9,11 +9,149 @@
 #include <cstdio>
 #include <cstdlib>
 #include <csignal>
+#include <cstdlib>
 
+#define LINHAS 9
+#define COLUNAS 9
 
 using namespace std;
 using namespace BlackLib;
 
+int matriz[LINHAS][COLUNAS];
+int verificacaoLinha[COLUNAS];
+int verificacaoColuna[LINHAS];
+
+
+void iniciar() {
+    for(int i = 0; i < LINHAS; i++) {
+        for(int j = 0; j < COLUNAS; j++) {
+            matriz[i][j]  = 0;
+        }
+    }
+}
+
+bool verificarLinha(int linha) {
+    for(int i = 0; i < COLUNAS; i++) {
+        verificacaoLinha[i] = 0;
+    }
+    
+    for(int i = 0; i < COLUNAS; i++) {
+        if(matriz[linha][i] > 0) {
+            if(verificacaoLinha[matriz[linha][i]] == 0) {
+                verificacaoLinha[matriz[linha][i]] = matriz[linha][i];
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+bool verificarColuna(int coluna) {
+    for(int i = 0; i < LINHAS; i++) {
+        verificacaoColuna[i] = 0;
+    }
+    
+    for(int i = 0; i < LINHAS; i++) {
+        if(matriz[i][coluna] > 0) {
+            if(verificacaoColuna[matriz[i][coluna]] == 0) {
+                verificacaoColuna[matriz[i][coluna]] = matriz[i][coluna];
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+    
+void imprimir() {
+int markcol1=0, markcol2=0, marklin1=0, marklin2=0;;
+    for(int i = 0; i < LINHAS; i++) {
+        for(int j = 0; j < COLUNAS; j++) {
+            if(matriz[i][j] > 0) 
+                std::cout << matriz[i][j];
+            else
+                std::cout << " ";
+            std::cout << "|";  
+            if(markcol1++ ==(COLUNAS/2)-2){
+			std::cout << ":|";
+			
+			}  
+			if(markcol2++ ==(COLUNAS/2)+1){
+			std::cout << ":|";
+			
+			} 
+			
+        }
+        std::cout << std::endl;
+        markcol1=0; markcol2=0;
+		if(marklin1++ ==(LINHAS/2)-2){
+			std::cout << "======================\n";
+			
+		}  
+		if(marklin2++ ==(LINHAS/2)+1){
+		std::cout << "======================\n";
+		
+		} 	
+    }    	
+
+    
+    for(int i = 0; i < LINHAS; i++){
+        if(!verificarLinha(i)) {
+            std:: cout << "Linha " << i << " INCORRETA" << std::endl;
+        }    
+    }
+    
+    for(int i = 0; i < COLUNAS; i++){
+        if(!verificarColuna(i)) {
+            std:: cout << "Coluna " << i << " INCORRETA" << std::endl;
+        }    
+    }
+}
+
+bool verificaValoresIguais(int linha, int coluna, int valor){
+	int i, c=coluna, l=linha;
+	for(i=0;i<linha;i++){
+		if(matriz[c][i]==valor || matriz[i][l]==valor){
+				return true;
+			}
+		
+		}
+	return false;
+}
+
+void insereValor(int linha, int coluna){
+	int  valor;
+	std::cout << "Informe o valor: ";
+    std::cin >> valor;
+    if (valor<=COLUNAS){
+	matriz[linha][coluna] = valor;	
+	}
+    else{
+		cout << "valor inválido"<<endl;
+		insereValor(linha,coluna);
+		}
+		
+}
+
+
+void jogar() {
+    int linha, coluna;
+    
+    std::cout << "Informe a linha: ";
+    std::cin >> linha;
+    
+    std::cout << "Informe a coluna: ";
+    std::cin >> coluna;
+    
+    insereValor(linha,coluna);
+   
+
+}
 void detectarAlarme(int sig){
 	cout<<"Terminou o jogo"<<endl;
 	kill(getpid(),SIGKILL);
@@ -44,9 +182,15 @@ int main(int argc, char *argv[])
 		case 1: /*Processo Filho reponsável pelo jogo*/			
 				printf("Eu sou o filho PID %d | PPID %d",getpid(),getppid());
 				
+				iniciar();
+    
+				imprimir();
 				
-				
-			}	
+				while(true) {
+					std::system("clear");
+					imprimir();
+					jogar();
+				}	
 		break;
 		default:/*Processo Pai responsável pelo tempo do jogo*/
 			ledB.setValue(low);
