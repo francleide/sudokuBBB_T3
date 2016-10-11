@@ -13,7 +13,7 @@ Francleide Simão e José Victor Andrade
 ####IMPLEMENTAÇÃO
 <p>A implementação foi feita utilizando a linguagem C++ no sistema operacional Ubuntu.<br>
 
-<a href="">Código do Projeto</a>
+<a href="https://github.com/francleide/sudokuBBB_T3/blob/master/sudoku.cpp">Código do Projeto</a>
 
 ######EXECUÇÃO
 Para executar abra o terminal do linux. Navegue até a pasta em que está o arquivo Trabalho_2.cpp e execute o código:<br>
